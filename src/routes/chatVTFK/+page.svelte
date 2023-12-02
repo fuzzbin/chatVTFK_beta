@@ -2,14 +2,17 @@
     import { plainChat } from "$lib/openaiUtils.js"
 
     let spm = "Hva er tåke?"
+    let svar = "Her kommer svaret"
+    let temperatur = 0.5
+    let kontekst = "Her kommer konteksten"
 
     const normalChat = async () => {
         console.log(spm)
-        const svar = await plainChat(spm)
+        svar = await plainChat(spm, temperatur, kontekst)
         console.log(svar)
+        console.log(temperatur)
         return svar
     }
-
 
 </script>
 <main>
@@ -17,7 +20,11 @@
     <div id="hovedDiv">
         <div id="chatModul">
             <div id="responsDiv">
-                Her kommer responsen
+                {#await svar}
+                    Venter på svar...
+                {:then res} 
+                    {res}
+                {/await}
             </div>
             <div id="spmDiv">
                 <textarea name="" id="" cols="30" rows="10" bind:value={spm}></textarea>
@@ -26,6 +33,10 @@
         </div>
         <div id="kontrollModul">
             <h3>Kontekst</h3>
+            <textarea name="" id="" cols="30" rows="10" bind:value={kontekst}></textarea>
+            <h3>Temperatur</h3>
+            <input type="range" name="" id="rangeInput" min="0.0" max="1.0" step="0.1" bind:value={temperatur}>
+
         </div>
     </div>
 
@@ -46,7 +57,7 @@
     }
     #kontrollModul {
         width: 80%;
-        height: 20%;
+        height: 80%;
         background-color: rgb(217, 121, 121);
     }
 </style>
